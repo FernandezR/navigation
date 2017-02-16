@@ -45,6 +45,8 @@
 #include <actionlib/server/simple_action_server.h>
 #include <move_base_msgs/MoveBaseAction.h>
 
+#include <move_base_msgs/MoveBaseLogging.h>
+
 #include <nav_core/base_local_planner.h>
 #include <nav_core/base_global_planner.h>
 #include <nav_core/recovery_behavior.h>
@@ -104,8 +106,24 @@ namespace move_base {
 
     private:
       /**
+       * @brief  A service call that initializes a count variable to 0 that keeps track of replans
+       * @param req The service request
+       * @param resp The service response
+       * @return True if the service call succeeds, false otherwise
+       */
+      bool initCountService(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp);
+
+      /**
+       * @brief  A service call that logs a count variable that keeps track of replans
+       * @param req The service request
+       * @param resp The service response
+       * @return True if the service call succeeds, false otherwise
+       */
+      bool logCountService(move_base_msgs::MoveBaseLogging::Request &req, move_base_msgs::MoveBaseLogging::Response &resp);
+
+      /**
        * @brief  A service call that clears the costmaps of obstacles
-       * @param req The service request 
+       * @param req The service request
        * @param resp The service response
        * @return True if the service call succeeds, false otherwise
        */
@@ -129,7 +147,7 @@ namespace move_base {
 
       /**
        * @brief  Load the recovery behaviors for the navigation stack from the parameter server
-       * @param node The ros::NodeHandle to be used for loading parameters 
+       * @param node The ros::NodeHandle to be used for loading parameters
        * @return True if the recovery behaviors were loaded successfully, false otherwise
        */
       bool loadRecoveryBehaviors(ros::NodeHandle node);
@@ -190,11 +208,11 @@ namespace move_base {
       double planner_frequency_, controller_frequency_, inscribed_radius_, circumscribed_radius_;
       double planner_patience_, controller_patience_;
       int32_t max_planning_retries_;
-      uint32_t planning_retries_;
+      uint32_t planning_retries_, replan_count_, recovery_count_;
       double conservative_reset_dist_, clearing_radius_;
       ros::Publisher current_goal_pub_, vel_pub_, action_goal_pub_;
       ros::Subscriber goal_sub_;
-      ros::ServiceServer make_plan_srv_, clear_costmaps_srv_;
+      ros::ServiceServer make_plan_srv_, clear_costmaps_srv_, init_count_srv_, log_count_srv_;
       bool shutdown_costmaps_, clearing_rotation_allowed_, recovery_behavior_enabled_;
       double oscillation_timeout_, oscillation_distance_;
 
@@ -222,7 +240,7 @@ namespace move_base {
 
       boost::recursive_mutex configuration_mutex_;
       dynamic_reconfigure::Server<move_base::MoveBaseConfig> *dsrv_;
-      
+
       void reconfigureCB(move_base::MoveBaseConfig &config, uint32_t level);
 
       move_base::MoveBaseConfig last_config_;
