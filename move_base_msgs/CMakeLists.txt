@@ -16,6 +16,10 @@ add_action_files(
         MoveBase.action
 )
 
+add_service_files(
+    DIRECTORY srv
+    FILES MoveBaseLogging.srv)
+
 generate_messages(
     DEPENDENCIES
         actionlib_msgs
