@@ -177,6 +177,9 @@ namespace move_base {
 
 
     init_count_srv_ = private_nh.advertiseService("init_replan_count", &MoveBase::initCountService, this);
+    init_count_turn_srv_ = private_nh.advertiseService("init_replan_count_turn", &MoveBase::initCountService, this);
+    init_count_door_srv_ = private_nh.advertiseService("init_replan_count_door", &MoveBase::initCountService, this);
+	init_count_elevator_srv_ = private_nh.advertiseService("init_replan_count_elevator", &MoveBase::initCountService, this);
 
     log_count_srv_ = private_nh.advertiseService("log_replan_count", &MoveBase::logCountService, this);
 
@@ -391,14 +394,27 @@ namespace move_base {
   bool MoveBase::initCountService(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp){
     //clear the costmaps
     replan_count_ = 0;
+    replan_count_turn_ = 0;
+    replan_count_door_ = 0;
+    replan_count_elevator_ = 0;
     recovery_count_ = 0;
+    recovery_count_turn_ = 0;
+    recovery_count_door_ = 0;
+    recovery_count_elevator_ = 0;
     return true;
   }
 
   bool MoveBase::logCountService(move_base_msgs::MoveBaseLogging::Request &req, move_base_msgs::MoveBaseLogging::Response &res){
     //clear the costmaps
     res.replan_count = replan_count_;
+    res.replan_count_door = replan_count_door_;
+    res.replan_count_turn = replan_count_turn_;
+    res.replan_count_elevator = replan_count_elevator_;
     res.recovery_count = recovery_count_;
+    res.recovery_count_door = recovery_count_door_;
+    res.recovery_count_turn = recovery_count_turn_;
+    res.recovery_count_elevator = recovery_count_elevator_;
+
     return true;
   }
 
@@ -529,7 +545,9 @@ namespace move_base {
     boost::unique_lock<costmap_2d::Costmap2D::mutex_t> lock(*(planner_costmap_ros_->getCostmap()->getMutex()));
 
     replan_count_++;
-
+    replan_count_turn_++;
+    replan_count_door_++;
+    replan_count_elevator_++;
     //make sure to set the plan to be empty initially
     plan.clear();
 
@@ -1018,6 +1036,9 @@ namespace move_base {
       case CLEARING:
         ROS_DEBUG_NAMED("move_base","In clearing/recovery state");
         recovery_count_++;
+        recovery_count_door_++;
+        recovery_count_turn_++;
+        recovery_count_elevator_++;
         //we'll invoke whatever recovery behavior we're currently on if they're enabled
         if(recovery_behavior_enabled_ && recovery_index_ < recovery_behaviors_.size()){
           ROS_DEBUG_NAMED("move_base_recovery","Executing behavior %u of %zu", recovery_index_, recovery_behaviors_.size());

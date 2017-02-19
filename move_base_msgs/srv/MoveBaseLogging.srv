@@ -1,4 +1,10 @@
 
 ---
 int64 replan_count
+int64 replan_count_turn
+int64 replan_count_door
+int64 replan_count_elevator
 int64 recovery_count
+int64 recovery_count_turn
+int64 recovery_count_door
+int64 recovery_count_elevator
