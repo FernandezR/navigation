@@ -208,11 +208,11 @@ namespace move_base {
       double planner_frequency_, controller_frequency_, inscribed_radius_, circumscribed_radius_;
       double planner_patience_, controller_patience_;
       int32_t max_planning_retries_;
-      uint32_t planning_retries_, replan_count_, recovery_count_;
+      uint32_t planning_retries_, replan_count_,replan_count_turn_, replan_count_door_, replan_count_elevator_, recovery_count_,recovery_count_turn_,recovery_count_door_, recovery_count_elevator_;
       double conservative_reset_dist_, clearing_radius_;
       ros::Publisher current_goal_pub_, vel_pub_, action_goal_pub_;
       ros::Subscriber goal_sub_;
-      ros::ServiceServer make_plan_srv_, clear_costmaps_srv_, init_count_srv_, log_count_srv_;
+      ros::ServiceServer make_plan_srv_, clear_costmaps_srv_, init_count_srv_, init_count_turn_srv_, init_count_door_srv_, init_count_elevator_srv_, log_count_srv_;
       bool shutdown_costmaps_, clearing_rotation_allowed_, recovery_behavior_enabled_;
       double oscillation_timeout_, oscillation_distance_;
 
