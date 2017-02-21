@@ -177,12 +177,15 @@ namespace move_base {
 
 
     init_count_srv_ = private_nh.advertiseService("init_replan_count", &MoveBase::initCountService, this);
-    init_count_turn_srv_ = private_nh.advertiseService("init_replan_count_turn", &MoveBase::initCountService, this);
-    init_count_door_srv_ = private_nh.advertiseService("init_replan_count_door", &MoveBase::initCountService, this);
-	init_count_elevator_srv_ = private_nh.advertiseService("init_replan_count_elevator", &MoveBase::initCountService, this);
+    init_count_turn_srv_ = private_nh.advertiseService("init_replan_count_turn", &MoveBase::initCountServiceTurn, this);
+    init_count_door_srv_ = private_nh.advertiseService("init_replan_count_door", &MoveBase::initCountServiceDoor, this);
+	init_count_elevator_srv_ = private_nh.advertiseService("init_replan_count_elevator", &MoveBase::initCountServiceElevator, this);
 
     log_count_srv_ = private_nh.advertiseService("log_replan_count", &MoveBase::logCountService, this);
-
+    log_count_turn_srv_ = private_nh.advertiseService("log_replan_count_turn", &MoveBase::logCountServiceTurn, this);
+	log_count_door_srv_ =  private_nh.advertiseService("log_replan_count_door", &MoveBase::logCountServiceDoor, this);
+	log_count_elevator_srv_ =  private_nh.advertiseService("log_replan_count_elevator", &MoveBase::logCountServiceElevator, this);
+	
     //if we shutdown our costmaps when we're deactivated... we'll do that now
     if(shutdown_costmaps_){
       ROS_DEBUG_NAMED("move_base","Stopping costmaps initially");
@@ -394,29 +397,53 @@ namespace move_base {
   bool MoveBase::initCountService(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp){
     //clear the costmaps
     replan_count_ = 0;
-    replan_count_turn_ = 0;
-    replan_count_door_ = 0;
-    replan_count_elevator_ = 0;
     recovery_count_ = 0;
-    recovery_count_turn_ = 0;
-    recovery_count_door_ = 0;
-    recovery_count_elevator_ = 0;
     return true;
   }
+  
+  bool MoveBase::initCountServiceTurn(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp){
+    replan_count_turn_ = 0;
+    recovery_count_turn_ = 0;
+  }
 
+  bool MoveBase::initCountServiceDoor(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp){
+    replan_count_door_ = 0;
+    recovery_count_door_ = 0;
+  }
+  
+  bool MoveBase::initCountServiceElevator(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp){
+    replan_count_elevator_ = 0;
+    recovery_count_elevator_ = 0;
+  }
+  
   bool MoveBase::logCountService(move_base_msgs::MoveBaseLogging::Request &req, move_base_msgs::MoveBaseLogging::Response &res){
     //clear the costmaps
     res.replan_count = replan_count_;
-    res.replan_count_door = replan_count_door_;
-    res.replan_count_turn = replan_count_turn_;
-    res.replan_count_elevator = replan_count_elevator_;
     res.recovery_count = recovery_count_;
-    res.recovery_count_door = recovery_count_door_;
-    res.recovery_count_turn = recovery_count_turn_;
-    res.recovery_count_elevator = recovery_count_elevator_;
-
     return true;
   }
+  
+  bool MoveBase::logCountServiceDoor(move_base_msgs::MoveBaseLogging::Request &req, move_base_msgs::MoveBaseLogging::Response &res){
+    //clear the costmaps
+    res.replan_count = replan_count_door_;
+    res.recovery_count = recovery_count_door_;
+    return true;
+  }
+  
+  bool MoveBase::logCountServiceTurn(move_base_msgs::MoveBaseLogging::Request &req, move_base_msgs::MoveBaseLogging::Response &res){
+    //clear the costmaps
+    res.replan_count = replan_count_turn_;
+    res.recovery_count = recovery_count_turn_;
+    return true;
+  }
+  
+  bool MoveBase::logCountServiceElevator(move_base_msgs::MoveBaseLogging::Request &req, move_base_msgs::MoveBaseLogging::Response &res){
+    //clear the costmaps
+    res.replan_count = replan_count_elevator_;
+    res.recovery_count = recovery_count_elevator_;
+    return true;
+  }
+  
 
   bool MoveBase::clearCostmapsService(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp){
     //clear the costmaps
