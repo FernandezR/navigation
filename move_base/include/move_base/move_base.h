@@ -113,6 +113,30 @@ namespace move_base {
        */
       bool initCountService(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp);
 
+       /**
+       * @brief  A service call that initializes a count variable to 0 that keeps track of replans
+       * @param req The service request
+       * @param resp The service response
+       * @return True if the service call succeeds, false otherwise
+       */
+      bool initCountServiceTurn(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp);
+      
+       /**
+       * @brief  A service call that initializes a count variable to 0 that keeps track of replans
+       * @param req The service request
+       * @param resp The service response
+       * @return True if the service call succeeds, false otherwise
+       */
+      bool initCountServiceDoor(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp);
+      
+       /**
+       * @brief  A service call that initializes a count variable to 0 that keeps track of replans
+       * @param req The service request
+       * @param resp The service response
+       * @return True if the service call succeeds, false otherwise
+       */
+      bool initCountServiceElevator(std_srvs::Empty::Request &req, std_srvs::Empty::Response &resp);
+      
       /**
        * @brief  A service call that logs a count variable that keeps track of replans
        * @param req The service request
@@ -120,6 +144,31 @@ namespace move_base {
        * @return True if the service call succeeds, false otherwise
        */
       bool logCountService(move_base_msgs::MoveBaseLogging::Request &req, move_base_msgs::MoveBaseLogging::Response &resp);
+      
+       
+       /**
+       * @brief  A service call that logs a count variable that keeps track of replans
+       * @param req The service request
+       * @param resp The service response
+       * @return True if the service call succeeds, false otherwise
+       */
+       bool logCountServiceDoor(move_base_msgs::MoveBaseLogging::Request &req, move_base_msgs::MoveBaseLogging::Response &res);
+      
+      /**
+       * @brief  A service call that logs a count variable that keeps track of replans
+       * @param req The service request
+       * @param resp The service response
+       * @return True if the service call succeeds, false otherwise
+       */
+      bool logCountServiceTurn(move_base_msgs::MoveBaseLogging::Request &req, move_base_msgs::MoveBaseLogging::Response &res);
+      
+       /**
+       * @brief  A service call that logs a count variable that keeps track of replans
+       * @param req The service request
+       * @param resp The service response
+       * @return True if the service call succeeds, false otherwise
+       */
+      bool logCountServiceElevator(move_base_msgs::MoveBaseLogging::Request &req, move_base_msgs::MoveBaseLogging::Response &resp);
 
       /**
        * @brief  A service call that clears the costmaps of obstacles
@@ -212,7 +261,7 @@ namespace move_base {
       double conservative_reset_dist_, clearing_radius_;
       ros::Publisher current_goal_pub_, vel_pub_, action_goal_pub_;
       ros::Subscriber goal_sub_;
-      ros::ServiceServer make_plan_srv_, clear_costmaps_srv_, init_count_srv_, init_count_turn_srv_, init_count_door_srv_, init_count_elevator_srv_, log_count_srv_;
+      ros::ServiceServer make_plan_srv_, clear_costmaps_srv_, init_count_srv_, init_count_turn_srv_, init_count_door_srv_, init_count_elevator_srv_, log_count_srv_, log_count_turn_srv_, log_count_door_srv_, log_count_elevator_srv_;
       bool shutdown_costmaps_, clearing_rotation_allowed_, recovery_behavior_enabled_;
       double oscillation_timeout_, oscillation_distance_;
 
